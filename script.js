@@ -1,33 +1,43 @@
-const taskInput = document.getElementById("task");
-const addBtn = document.getElementById("add");
-const taskList = document.getElementById("taskList");
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const task = input.value.trim();
+  if (task === "") return;
 
-// Add task
-addBtn.addEventListener("click", () => {
-  const taskText = taskInput.value.trim();
-  if (taskText !== "") {
-    createTask(taskText);
-    taskInput.value = "";
-  }
-});
+  const tableBody = document.getElementById("taskTableBody");
 
-// Create a new task
-function createTask(text) {
-  const taskItem = document.createElement("li");
-  taskItem.innerHTML = `
-    <span>${text}</span>
-    <button class="delete">Delete</button>
-  `;
-  taskList.appendChild(taskItem);
+  const row = document.createElement("tr");
 
-  // Delete task
-  const deleteBtn = taskItem.querySelector(".delete");
-  deleteBtn.addEventListener("click", () => {
-    taskItem.remove();
-  });
+  const taskCell = document.createElement("td");
+  taskCell.innerText = task;
 
-  // Mark as completed
-  taskItem.addEventListener("click", () => {
-    taskItem.classList.toggle("completed");
-  });
+  const statusCell = document.createElement("td");
+  const status = document.createElement("span");
+  status.innerText = "pending";
+  status.classList.add("status", "pending");
+  status.onclick = function () {
+    if (status.innerText === "pending") {
+      status.innerText = "Completed";
+      status.classList.remove("pending");
+      status.classList.add("completed");
+    } else {
+      status.innerText = "pending";
+      status.classList.remove("completed");
+      status.classList.add("pending");
+    }
+  };
+  statusCell.appendChild(status);
+
+  const deleteCell = document.createElement("td");
+  deleteCell.innerHTML = "🗑️";
+  deleteCell.classList.add("delete-btn");
+  deleteCell.onclick = function () {
+    row.remove();
+  };
+
+  row.appendChild(taskCell);
+  row.appendChild(statusCell);
+  row.appendChild(deleteCell);
+
+  tableBody.appendChild(row);
+  input.value = "";
 }
